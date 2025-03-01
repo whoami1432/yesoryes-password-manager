@@ -1,0 +1,428 @@
+{
+	"info": {
+		"_postman_id": "a909a880-4ac8-4741-a1e3-39e569d4b4ed",
+		"name": "yesoryes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36514417"
+	},
+	"item": [
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "{{Auth-Token}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"johndoe@example2.com\",\n    \"mobileNumber\": 9876543210,\n    \"password\": \"SecurePassword123\",\n    \"confirmPassword\": \"SecurePassword123\",\n    \"country\": \"India\",\n    \"city\": \"Chennai\",\n    \"state\": \"Tamil Nadu\",\n    \"gender\": \"Male\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/user/register",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "email-verify",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "{{Auth-Token}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"id\": \"67c3055d07c77c554c5ce237\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/user/email-verification",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"email-verification"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"johndoe@example2.com\",\n\t\"password\": \"SecurePassword123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/user/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Auth-Token",
+						"value": "{{Auth-Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/helloworld",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"helloworld"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin, user - get detail",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Auth-Token",
+						"value": "{{Auth-Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/user/67c2c7241a58fa7b07e880e1",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"67c2c7241a58fa7b07e880e1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin,user - auth",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Auth-Token",
+						"value": "{{Auth-Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/helloworld/2",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"helloworld",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin-listallusers",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Auth-Token",
+						"value": "{{Auth-Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/user/admin/list",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"admin",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin-updaterole",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Auth-Token",
+						"value": "{{Auth-Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"67c2c0cc4658126b7dfe712f\",\n    \"role\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/user/admin/update-role",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"admin",
+						"update-role"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin-enabledisable",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Auth-Token",
+						"value": "{{Auth-Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"67c2c0cc4658126b7dfe712f\",\n    \"isDeleted\": true \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/user/admin/manage",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"admin",
+						"manage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update password",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Auth-Token",
+						"value": "{{Auth-Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"67c2c0cc4658126b7dfe712f\",\n    \"password\": \"SecurePassword123\",\n    \"confirmPassword\": \"SecurePassword123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/user/password",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin, user - update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Auth-Token",
+						"value": "{{Auth-Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"John1\",\n    \"email\": \"johndoe@example3.com\",\n    \"mobileNumber\": 9876543210,\n    \"password\": \"SecurePassword123\",\n    \"confirmPassword\": \"SecurePassword123\",\n    \"country\": \"India\",\n    \"city\": \"Chennai\",\n    \"state\": \"Tamil Nadu\",\n    \"gender\": \"Male\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/user/67c2c0cc4658126b7dfe712f",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"67c2c0cc4658126b7dfe712f"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://localhost:8081",
+			"type": "string"
+		},
+		{
+			"key": "Auth-Token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvaG4gRG9lIiwiZ2VuZGVyIjoiTWFsZSIsImVtYWlsIjoiam9obmRvZUBleGFtcGxlMi5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDA4NTM3OTMsImV4cCI6MTc0MDg3MTc5M30.rq19Ka-Jd15WQ6WOBr1dQ1hn14vk8GZYjiqmPBKy-yM",
+			"type": "string"
+		}
+	]
+}

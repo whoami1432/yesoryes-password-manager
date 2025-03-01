@@ -83,3 +83,21 @@ Postman collection has been added. You can import it and check the data using th
 - **Prettier**: Code formatter for consistent code style.
 - **`.gitignore`**: Pre-configured to exclude sensitive files and directories.
 - **Swagger**: API documentation and testing tool.
+
+## User Schema
+
+The `userModel` schema defines the structure of the user documents in the MongoDB database. Below are the details of each field:
+
+- `name`: A required string field for the user's name.
+- `email`: A required string field for the user's email, which must be unique and indexed.
+- `mobileNumber`: A required number field for the user's mobile number.
+- `password`: A required string field for the user's password.
+- `country`: A required string field for the user's country.
+- `city`: A required string field for the user's city.
+- `state`: A required string field for the user's state.
+- `gender`: A required string field for the user's gender, which can be 'Male', 'Female', or 'Other'.
+- `createdDate`: A date field that defaults to the current date and time when the document is created.
+- `modifiedDate`: A date field for the last modified date of the document.
+- `isDeleted`: A boolean field that indicates whether the user is deleted, defaulting to `false`.
+- `role`: A string field for the user's role, which can be 'public', 'user', or 'admin', defaulting to 'public'.
+- `isEmailVerified`: A boolean field that indicates whether the user's email is verified, defaulting to `false`.

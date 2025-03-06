@@ -14,7 +14,7 @@ router.post('/email-verification', users.emailVerification);
 router.post('/password-reset', passwordResetLimiter, users.passwordReset);
 router.get('/admin/list', authourize, roleAuthourize(['admin']), users.listAllUsers);
 router.put('/admin/update-role', authourize, roleAuthourize(['admin']), users.updateRoles);
-router.delete('/admin/manage', authourize, roleAuthourize(['admin']), users.enableOrdDisableUsers);
+router.delete('/admin/manage/:id/:isDeleted', authourize, roleAuthourize(['admin']), users.enableOrdDisableUsers);
 router.put('/password', authourize, roleAuthourize(['admin', 'user']), users.passwordUpdate);
 router.get('/:id', authourize, roleAuthourize(['admin', 'user']), users.getUserDetails);
 router.put('/:id', authourize, roleAuthourize(['admin', 'user']), users.updateUserDetails);

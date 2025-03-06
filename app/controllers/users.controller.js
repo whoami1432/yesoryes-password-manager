@@ -97,7 +97,7 @@ exports.userLogin = async (req, res, next) => {
 			});
 		}
 
-		const { _id, name, gender, email, password, role } = await userModel.findOne({ email: req.body.email }, { _id: 1, name: 1, gender: 1, email: 1, password: 1, role: 1 });
+		const { _id, name, gender, email, password, role } = await userModel.findOne({ email: req.body.email, isDeleted: false }, { _id: 1, name: 1, gender: 1, email: 1, password: 1, role: 1 });
 		if (!_id) {
 			logger.info({ requestId: req.id, message: `User not foud` });
 			return res.status(200).json({
@@ -116,7 +116,8 @@ exports.userLogin = async (req, res, next) => {
 			return res.status(200).json({
 				Message: 'User Login Successfully',
 				data: {
-					token
+					token,
+					role
 				}
 			});
 		}
@@ -226,8 +227,7 @@ exports.listAllUsers = async (req, res, next) => {
 	try {
 		logger.info({ requestId: req.id, message: `Admin all users list received` });
 
-		const allUsers = await userModel.find({});
-
+		const allUsers = await userModel.find({}, { password: 0 });
 		if (allUsers?.length > 0) {
 			return res.status(200).json({
 				Message: 'All users list retrived successsfully',
@@ -271,7 +271,7 @@ exports.enableOrdDisableUsers = async (req, res, next) => {
 	try {
 		logger.info({ requestId: req.id, message: `Manage users req received` });
 
-		const { id, isDeleted } = req.body;
+		const { id, isDeleted } = req.params;
 
 		if (!id || !mongoose.isValidObjectId(id)) {
 			logger.info({ requestId: req.id, message: `Required field not found` });
@@ -281,7 +281,7 @@ exports.enableOrdDisableUsers = async (req, res, next) => {
 			});
 		}
 
-		if (isDeleted) {
+		if (isDeleted === 'true') {
 			const isRoleUpdated = await userModel.findOneAndUpdate({ _id: id }, { $set: { isDeleted: true } }, { new: true });
 			if (isRoleUpdated?._id) {
 				return res.status(200).json({
@@ -289,7 +289,7 @@ exports.enableOrdDisableUsers = async (req, res, next) => {
 					data: []
 				});
 			}
-		} else if (isDeleted === false) {
+		} else if (isDeleted === 'false') {
 			const isRoleUpdated = await userModel.findOneAndUpdate({ _id: id }, { $set: { isDeleted: false } }, { new: true });
 			if (isRoleUpdated?._id) {
 				return res.status(200).json({

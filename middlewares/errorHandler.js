@@ -22,7 +22,7 @@ const errorHandler = (err, req, res, next) => {
 			}
 		});
 	} catch (err) {
-		next(err);
+		logger.info(err);
 	}
 };
 

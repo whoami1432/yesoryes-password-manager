@@ -1,9 +1,7 @@
 'use strict';
 
 const crypto = require('node:crypto');
-const Joi = require('joi');
 const jwt = require('jsonwebtoken');
-
 const { logger } = require('../../config/logger');
 const userModel = require('../models/users.model');
 const { default: mongoose } = require('mongoose');
@@ -16,43 +14,9 @@ exports.userRegister = async (req, res, next) => {
 	try {
 		logger.info({ requestId: req.id, message: `User register request received` });
 
-		/** Joi validator using validate the request data */
-		const schema = Joi.object().keys({
-			name: Joi.string().required(),
-			email: Joi.string().email().required(),
-			mobileNumber: Joi.number().required(),
-			password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,20}$')),
-			confirmPassword: Joi.ref('password'),
-			country: Joi.string().required(),
-			city: Joi.string().required(),
-			state: Joi.string().required(),
-			gender: Joi.string().required()
-		});
-
-		const options = {
-			abortEarly: false,
-			allowUnknown: true,
-			stripUnknown: true
-		};
-
-		/** Passing the reques details into validater */
-		const { error } = schema.validate(req.body, options);
-
-		/** Check if any error is available request data if error occured pass into UI */
-		if (error) {
-			const errorMessage = error?.details && error?.details.length && error?.details[0]?.message ? error?.details[0]?.message : 'Missing required Field';
-			return res.status(400).json({
-				message: errorMessage,
-				data: []
-			});
-		}
-
-		logger.info({ requestId: req.id, message: `User request validation completed` });
-
 		const { _id } = (await userModel.findOne({ $or: [{ email: req.body.email }, { mobileNumber: req.body.mobileNumber }] }, { _id: 1 })) || {};
 		if (_id) {
 			logger.info({ requestId: req.id, message: `User already registered` });
-
 			return res.status(200).json({
 				message: 'User Already Exists',
 				data: []
@@ -62,8 +26,7 @@ exports.userRegister = async (req, res, next) => {
 		logger.info({ requestId: req.id, message: `Going to encrypt the password` });
 
 		const body = req.body;
-
-		const cipher = crypto.createCipheriv(algorithm, secretKey, null); // No IV needed
+		const cipher = crypto.createCipheriv(algorithm, secretKey, null);
 		const encrypted = cipher.update(body.password, 'utf8', 'hex');
 		const encryptedPassword = encrypted + cipher.final('hex');
 
@@ -87,7 +50,7 @@ exports.userRegister = async (req, res, next) => {
 
 exports.userLogin = async (req, res, next) => {
 	try {
-		logger.info({ requestId: req.id, message: `User register request received` });
+		logger.info({ requestId: req.id, message: `User login request received` });
 
 		if (!req.body.email || !req.body.password) {
 			logger.info({ requestId: req.id, message: `Required field not found` });
@@ -99,7 +62,7 @@ exports.userLogin = async (req, res, next) => {
 
 		const { _id, name, gender, email, password, role } = await userModel.findOne({ email: req.body.email, isDeleted: false }, { _id: 1, name: 1, gender: 1, email: 1, password: 1, role: 1 });
 		if (!_id) {
-			logger.info({ requestId: req.id, message: `User not foud` });
+			logger.info({ requestId: req.id, message: `User not found` });
 			return res.status(200).json({
 				message: 'User not found',
 				data: []
@@ -141,7 +104,6 @@ exports.emailVerification = async (req, res, next) => {
 		}
 
 		const isUpdated = await userModel.findOneAndUpdate({ _id: id }, { $set: { isEmailVerified: true } }, { new: true });
-		console.log(isUpdated);
 		if (isUpdated?._id) {
 			logger.info({ requestId: req.id, message: `Email Verified Successfully` });
 			return res.status(200).json({
@@ -158,37 +120,12 @@ exports.passwordReset = async (req, res, next) => {
 	try {
 		logger.info({ requestId: req.id, message: `Password reset request received` });
 
-		const schema = Joi.object().keys({
-			email: Joi.string().email().required(),
-			mobileNumber: Joi.number().required(),
-			password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,20}$')),
-			confirmPassword: Joi.ref('password')
-		});
-
-		const options = {
-			abortEarly: false,
-			allowUnknown: true,
-			stripUnknown: true
-		};
-
-		/** Passing the reques details into validater */
-		const { error } = schema.validate(req.body, options);
-
-		/** Check if any error is available request data if error occured pass into UI */
-		if (error) {
-			const errorMessage = error?.details && error?.details.length && error?.details[0]?.message ? error?.details[0]?.message : 'Missing required Field';
-			return res.status(400).json({
-				message: errorMessage,
-				data: []
-			});
-		}
-
 		const { _id, isEmailVerified } =
 			(await userModel.findOne(
 				{
 					$or: [{ email: req.body.email }, { mobileNumber: req.body.mobileNumber }]
 				},
-				{ _id: 1 }
+				{ _id: 1, isEmailVerified: 1 }
 			)) || {};
 
 		if (!_id) {
@@ -285,7 +222,7 @@ exports.enableOrdDisableUsers = async (req, res, next) => {
 			const isRoleUpdated = await userModel.findOneAndUpdate({ _id: id }, { $set: { isDeleted: true } }, { new: true });
 			if (isRoleUpdated?._id) {
 				return res.status(200).json({
-					Message: 'User Deactivated  Successfully',
+					Message: 'User Deactivated Successfully',
 					data: []
 				});
 			}
@@ -293,7 +230,7 @@ exports.enableOrdDisableUsers = async (req, res, next) => {
 			const isRoleUpdated = await userModel.findOneAndUpdate({ _id: id }, { $set: { isDeleted: false } }, { new: true });
 			if (isRoleUpdated?._id) {
 				return res.status(200).json({
-					Message: 'User Activated  Successfully',
+					Message: 'User Activated Successfully',
 					data: []
 				});
 			}
@@ -310,42 +247,9 @@ exports.enableOrdDisableUsers = async (req, res, next) => {
 
 exports.passwordUpdate = async (req, res, next) => {
 	try {
-		logger.info({ requestId: req.id, message: `Password upadee req received` });
+		logger.info({ requestId: req.id, message: `Password update req received` });
 
-		/** Joi validator using validate the request data */
-		const schema = Joi.object().keys({
-			id: Joi.string().required(),
-			password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,20}$')),
-			confirmPassword: Joi.ref('password')
-		});
-
-		const options = {
-			abortEarly: false,
-			allowUnknown: true,
-			stripUnknown: true
-		};
-
-		/** Passing the reques details into validater */
-		const { error } = schema.validate(req.body, options);
-
-		/** Check if any error is available request data if error occured pass into UI */
-		if (error) {
-			const errorMessage = error?.details && error?.details.length && error?.details[0]?.message ? error?.details[0]?.message : 'Missing required Field';
-			return res.status(400).json({
-				message: errorMessage,
-				data: []
-			});
-		}
-
-		if (!mongoose.isValidObjectId(req.body.id)) {
-			logger.info({ requestId: req.id, message: `Required field not found` });
-			return res.status(400).json({
-				message: 'Not a valid input',
-				data: []
-			});
-		}
-
-		const cipher = crypto.createCipheriv(algorithm, secretKey, null); // No IV needed
+		const cipher = crypto.createCipheriv(algorithm, secretKey, null);
 		const encrypted = cipher.update(req.body.password, 'utf8', 'hex');
 		const encryptedPassword = encrypted + cipher.final('hex');
 
@@ -405,60 +309,11 @@ exports.getUserDetails = async (req, res, next) => {
 
 exports.updateUserDetails = async (req, res, next) => {
 	try {
-		logger.info({ requestId: req.id, message: `User details req received` });
-
-		/** Joi validator using validate the request data */
-		const schema = Joi.object().keys({
-			name: Joi.string().required(),
-			email: Joi.string().email().required(),
-			mobileNumber: Joi.number().required(),
-			password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,20}$')),
-			confirmPassword: Joi.ref('password'),
-			country: Joi.string().required(),
-			city: Joi.string().required(),
-			state: Joi.string().required(),
-			gender: Joi.string().required()
-		});
-
-		const options = {
-			abortEarly: false,
-			allowUnknown: true,
-			stripUnknown: true
-		};
-
-		/** Passing the reques details into validater */
-		const { error } = schema.validate(req.body, options);
-
-		/** Check if any error is available request data if error occured pass into UI */
-		if (error) {
-			const errorMessage = error?.details && error?.details.length && error?.details[0]?.message ? error?.details[0]?.message : 'Missing required Field';
-			return res.status(400).json({
-				message: errorMessage,
-				data: []
-			});
-		}
+		logger.info({ requestId: req.id, message: `User details update req received` });
 
 		const { id } = req.params;
 
-		if (!mongoose.isValidObjectId(id)) {
-			logger.info({ requestId: req.id, message: `Required field not found` });
-			return res.status(400).json({
-				message: 'Not a valid input',
-				data: []
-			});
-		}
-
-		const data = await userModel.findOneAndUpdate(
-			{
-				_id: id
-			},
-			{
-				$set: { ...req.body, modifiedDate: new Date() }
-			},
-			{
-				new: true
-			}
-		);
+		const data = await userModel.findOneAndUpdate({ _id: id }, { $set: { ...req.body, modifiedDate: new Date() } }, { new: true });
 
 		if (data?._id) {
 			return res.status(200).json({
